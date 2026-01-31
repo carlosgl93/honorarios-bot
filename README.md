@@ -1,243 +1,168 @@
-# React-PWA v3 🚀🎉⚡️
+# SII Honorarios Bot 🤖
 
-[![Analyses](https://github.com/suren-atoyan/react-pwa/actions/workflows/analyses.yml/badge.svg)](https://github.com/suren-atoyan/react-pwa/actions/workflows/analyses.yml)
-[![E2E Tests](https://github.com/suren-atoyan/react-pwa/actions/workflows/tests:e2e.yml/badge.svg)](https://github.com/suren-atoyan/react-pwa/actions/workflows/tests:e2e.yml)
+Automated bot for generating Chilean tax invoices (Boletas de Honorarios) through the SII website using Playwright browser automation.
 
-<a href="http://react-pwa.surenatoyan.com/" target="_blank" rel="noreferrer">
- <img src="./public/cover.png" title="React-PWA Starter Kit" alt="React-PWA cover image">
-</a>
+## Features
 
-## 🌟 Overview
+- 🔐 **Secure Credential Storage**: Encrypted credentials stored in Firebase Firestore
+- 🤖 **Full Automation**: 15-step automated process for boleta emission
+- 📊 **History Tracking**: Complete history of all generated boletas
+- 💰 **Automatic Calculations**: Retention and net amount calculations
+- 🎨 **Modern UI**: Material-UI based responsive interface
+- 🔥 **Firebase Integration**: Firestore database and authentication
 
-**React-PWA** is an opinionated starter kit for building Progressive Web Applications with React. Designed to streamline development, it combines essential libraries, components, utilities, and developer tools to accelerate your workflow.
+## Tech Stack
 
-## 💡 Motivation
+- **Frontend**: React 19 + TypeScript + Vite
+- **UI**: Material-UI (MUI) v6
+- **State Management**: Jotai
+- **Automation**: Playwright
+- **Database**: Firebase Firestore
+- **Encryption**: CryptoJS (AES-256)
+- **Routing**: React Router v7
 
-Building a modern web application requires a robust setup, including routing, UI components, theming, error handling, a structured file system, testing tools, and performance optimizations. **React-PWA** provides a production-ready, minimal, and efficient environment for developers to focus on creating great applications.
+## Prerequisites
 
-## ✨ Tech Stack & Features
+- Node.js 18+ and npm
+- Firebase project with Firestore enabled
+- Chilean SII account credentials
 
-### Core Technologies
-| Technology | Version | Description |
-|------------|---------|-------------|
-| [Vite](https://vitejs.dev/) | v6 | Fast build tool based on ES modules, Rollup, and esbuild |
-| [React](https://react.dev/) | v19 | Latest version with all modern features |
-| [TypeScript](https://www.typescriptlang.org/) | Latest | Type-safe JavaScript for better development |
-| [MUI](https://mui.com/) | v6 | Comprehensive UI framework with MUI |
+## Installation
 
-### Key Features
-- **Routing**: [React Router v7](https://reactrouter.com/) for flexible client-side routing
-- **State Management**: [Jotai](https://jotai.org/) for simple, efficient state handling
-- **Theming**: Customizable dark/light mode with MUI [theme system](https://mui.com/material-ui/customization/theming/)
-- **Notifications**: Alert system with MUI Toolpad integration
-- **PWA Support**: Works offline and installs on any device
-- **Hotkeys**: Built-in keyboard shortcuts for common actions
-- **Error Handling**: Graceful error boundaries with custom fallbacks
-- **Performance**: All green Lighthouse scores with optimized bundle size
-
-### Developer Tools
-- **Testing**: Vitest for unit tests, Playwright for e2e tests
-- **CI/CD**: GitHub Actions workflows for quality checks and testing
-- **Code Quality**: ESLint, Prettier, TypeScript integration
-- **Git Hooks**: Husky with lint-staged for pre-commit quality enforcement
-- **Local HTTPS**: Built-in support for local HTTPS development
-
-## 🚀 Getting Started
-
-### Quick Start
+1. Clone the repository:
 
 ```bash
-# Clone the repository
-git clone https://github.com/suren-atoyan/react-pwa.git
+git clone <repository-url>
+cd honorarios-bot
+```
 
-# Install dependencies
+1. Install dependencies:
+
+```bash
 npm install
+```
 
-# Start development server
+1. Install Playwright browsers:
+
+```bash
+npx playwright install chromium
+```
+
+1. Configure Firebase:
+   - Create a Firebase project at <https://console.firebase.google.com>
+   - Enable Firestore Database
+   - Copy your Firebase config
+
+2. Create `.env.local` file:
+
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_ENCRYPTION_KEY=your_32_character_encryption_key
+```
+
+## Usage
+
+### Development Mode
+
+```bash
 npm run dev
+```
 
-# Build for production
+This will start the development server with:
+
+- Headed browser (visible automation)
+- Hot module reloading
+- Console logging
+
+### Build for Production
+
+```bash
 npm run build
+npm run preview
 ```
 
-### Available Scripts
+## How It Works
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run prettier:check` | Check formatting |
-| `npm run lint:check` | Check linting |
-| `npm run ts:check` | Check TypeScript |
-| `npm run test:unit` | Run unit tests |
-| `npm run test:e2e` | Run e2e tests |
-| `npm run test:e2e:ui` | Run e2e tests in UI mode |
-| `npm run preview` | Preview production build locally |
-| `npm run https-preview` | Preview with HTTPS |
+### Automation Flow (15 Steps)
 
-## 📁 Project Structure
+1. Navigate to SII login page
+2. Enter RUT and password
+3. Click "INGRESAR" button
+4. Close "actualizar más tarde" modal
+5. Click "tramites en linea"
+6. Search for "boleta" in search input
+7. Select "Boletas de honorarios electronicas"
+8. Close modal by clicking "Cerrar"
+9. Click "Emisor de boleta de honorarios"
+10. Click "Emitir boleta de honorarios electrónica"
+11. Click "Por contribuyente"
+12. Select retention radio button
+13. Click "Continuar"
+14. Fill form with boleta data
+15. Capture confirmation and screenshot
+
+### Security Features
+
+- **AES-256 Encryption**: All passwords encrypted before storage
+- **Hashed User IDs**: RUT hashed with SHA-256 for user identification
+- **Firebase Security Rules**: Recommended Firestore rules (see below)
+- **No Plain Text Storage**: Credentials never stored in plain text
+
+## Project Structure
 
 ```
-react-pwa/
-├── ...
-├── src/
-│   ├── components/     # Reusable UI components
-│   ├── config/         # Application configuration
-│   ├── error-handling/ # Error management
-│   ├── hooks/          # Custom hooks
-│   ├── pages/          # Application pages/routes
-│   ├── routes/         # Routing configuration
-│   ├── sections/       # Self-contained application sections
-│   ├── theme/          # Theme configuration
-│   └── utils/          # Utility functions
-└── ...
+src/
+├── automation/          # Playwright automation scripts
+│   └── sii-bot.ts      # Main SII automation class
+├── config/             # Configuration files
+│   └── firebase.ts     # Firebase initialization
+├── pages/              # Application pages
+│   ├── Dashboard/      # Main dashboard
+│   ├── Login/          # Login/credentials page
+│   ├── BoletaForm/     # New boleta form
+│   └── History/        # Boletas history
+├── services/           # Business logic services
+│   ├── bot-runner.ts   # Bot execution orchestrator
+│   ├── encryption.ts   # Encryption utilities
+│   └── firestore.ts    # Firestore operations
+├── store/              # Jotai state atoms
+│   └── atoms.ts        # Global state atoms
+└── types/              # TypeScript types
+    └── boleta.ts       # Boleta data types
 ```
 
-### Component Organization
+## Firestore Collections
 
-Each component follows this structure:
-```
-ComponentName/
-├── index.ts          # Default exports the component
-├── ComponentName.tsx # Pure component implementation
-├── types.ts          # Component-related types (optional)
-├── styled.ts         # Styled components (optional)
-└── utils.ts          # Component-specific utilities (optional)
-```
+### `credentials`
 
-## 🔍 Key Features Explained
+- Document ID: SHA-256 hash of RUT
+- Fields: `rut` (encrypted), `encryptedPassword`, `createdAt`, `updatedAt`
 
-### UI Framework
-MUI ensures consistency, accessibility, and performance while remaining highly customizable to match your brand's design language.
+### `boletas`
 
-```jsx
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
+- Fields: `userId`, `receptorRut`, `receptorName`, `serviceDescription`, `totalAmount`, `status`, etc.
 
-// styled components
-const NewButton = styled(Button)(({ theme }) => ({
-  marginRight: theme.spacing(1),
-  color: theme.palette.text.disabled,
-}));
+### `execution_logs`
 
-// sx prop
-function MyComponent() {
-  return <Box sx={{ borderRadius: theme.shape.borderRadius }}>...</Box>;
-}
-```
+- Fields: `boletaId`, `step`, `status`, `message`, `timestamp`
 
-### 🎨 Theming
-The theme system is based on MUI Theme, supporting dark/light modes and customization.
+## Future Enhancements
 
-```jsx
-import { useThemeMode } from '@/theme';
+- [ ] PDF generation with boleta template
+- [ ] Email notifications
+- [ ] Multi-user authentication
+- [ ] Batch boleta processing
+- [ ] Advanced error recovery
 
-function MyComponent() {
-  const { themeMode, toggle } = useThemeMode();
-  
-  return <Button onClick={toggle}>Toggle Theme</Button>;
-}
-```
+## License
 
-### State Management
-Jotai provides simple atoms-based state management for cross-application state, complementing React's useState and data fetching libraries.
+MIT
 
-### Notifications
-Utilizes MUI Toolpad’s `useNotification` for handling alerts in an elegant, customizable way:
+## Disclaimer
 
-```jsx
-function MyComponent() {
-  const notifications = useNotifications();
-
-  function showNotification() {
-    notifications.show('Operation successful!', {
-      autoHideDuration: 5000,
-    });
-  }
-}
-```
-
-### 🔑 Hotkeys
-- `Alt+s`: Toggle theme mode
-- `Alt+t`: Toggle sidebar
-- `Alt+/`: Open hotkeys dialog
-
-### PWA Features
-- Works offline with service worker caching
-- Installable on mobile and desktop devices
-- Automatic updates (configurable in `vite.config.ts`)
-
-### 📱 Performance
-- Bundle size: ~65KB for largest chunk
-- Initial load: ~0.6s
-- Cached loads: ~0.01s
-
-<img src="./public/bundle.png" title="bundle">
-<img src="./public/audit.png" alt="Performance audit" title="Performance audit">
-
-### Error Handling
-The `withErrorHandler` HOC catches errors and displays friendly fallback UIs:
-
-```jsx
-// In your component:
-export default withErrorHandler(MyComponent);
-
-// Or for the entire app:
-export default withErrorHandler(App);
-```
-
-## 🧪 Testing
-
-### Unit Tests
-```bash
-npm run test:unit
-```
-
-### E2E Tests
-```bash
-npm run test:e2e
-# or with UI
-npm run test:e2e:ui
-```
-
-## 🌐 Environment Variables
-
-Place your environment variables in a `.env` file (prefixed with `VITE_`):
-- Templates available in the `env/` directory
-- Access via `import.meta.env.VITE_VARIABLE_NAME`
-
-## ❓ FAQ
-
-### Why use a UI library?
-A UI library ensures consistency, accessibility, and development efficiency. Without one, teams would need to create and maintain basic components from scratch, leading to inconsistencies and wasted time.
-
-### Why Jotai for state management?
-React applications have different state management needs:
-- **Component-level state**: `useState` for local UI interactions
-- **Data-layer state**: `useQuery` or `Apollo` for remote data
-- **Cross-application state**: Jotai provides a minimal, elegant approach
-
-### What's the difference between components, sections, and pages?
-- **Components**: Reusable UI elements (`Button`, `List`, etc.)
-- **Sections**: Self-contained UI parts with their own logic (`Navigation`, `Sidebar`, etc.)
-- **Pages**: Root route components representing application views
-
-### Why TypeScript?
-TypeScript reduces runtime errors, improves code maintainability, and enhances developer experience with static typing and better IDE support.
-
-### Why use Prettier?
-Prettier enforces consistent style across all contributors, reducing discussions in PR reviews and ensuring code quality.
-
-## 🔗 Demo
-
-Check out the [live demo](https://react-pwa.surenatoyan.com/)
-
-<div>
- <img src="./public/demo-dark.png" width="280" alt="Dark theme demo"> 
- <img src="./public/demo-light.png" width="280" alt="Light theme demo">
-</div>
-
-## 📄 License
-
-[MIT](./LICENSE)
+This bot automates interaction with the SII website. Use responsibly and in accordance with SII terms of service.

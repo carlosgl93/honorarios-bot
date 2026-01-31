@@ -1,7 +1,6 @@
 import { useHotkeys } from 'react-hotkeys-hook';
 
-import { Button, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
-import { Stack } from '@mui/system';
+import { Button, Dialog, DialogContent, DialogTitle, Stack, Typography } from '@mui/material';
 
 import { useSidebar } from '@/sections/Sidebar/hooks';
 import { useThemeMode } from '@/theme';

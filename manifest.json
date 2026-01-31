@@ -1,8 +1,8 @@
 {
-  "name": "React PWA",
-  "short_name": "reactpwa",
-  "description": "Starter kit for modern web applications",
-  "theme_color": "#ffffff",
+  "name": "SII Honorarios Bot",
+  "short_name": "SIIBot",
+  "description": "Automatización de boletas de honorarios del SII",
+  "theme_color": "#1976d2",
   "icons": [
     {
       "src": "pwa-192x192.png",

@@ -1,17 +1,8 @@
 {
-  "name": "react-pwa",
-  "version": "3.0.0",
+  "name": "sii-honorarios-bot",
+  "version": "1.0.0",
   "type": "module",
-  "description": "Starter kit for modern web applications",
-  "homepage": "https://react-pwa.surenatoyan.com/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/suren-atoyan/react-pwa.git"
-  },
-  "bugs": {
-    "url": "https://github.com/suren-atoyan/react-pwa/issues",
-    "email": "contact@surenatoyan.com"
-  },
+  "description": "Automated SII Boletas de Honorarios bot using Playwright",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
@@ -31,7 +22,10 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.6",
     "@mui/material": "^6.4.6",
+    "@mui/utils": "^7.3.7",
+    "@react-pdf/renderer": "^4.3.2",
     "@toolpad/core": "^0.12.1",
+    "firebase": "^12.8.0",
     "jotai": "^2.12.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

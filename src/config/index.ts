@@ -1,8 +1,8 @@
-const title = 'React PWA';
+const title = 'Boletas y Facturas';
 
-const email = 'auther-email@gmail.com';
+const email = 'cgumucio93@gmail.com';
 
-const repository = 'https://github.com/suren-atoyan/react-pwa';
+const repository = '';
 
 const dateFormat = 'MMMM DD, YYYY';
 

@@ -1,0 +1,1 @@
+import{af as t}from"./hooks-Z4K4jYqJ.js";const o=t({isRunning:!1,currentStep:"",progress:0});t("");const r=t({receptorRut:"",receptorName:"",receptorEmail:"",serviceDescription:"",serviceDate:new Date().toISOString().split("T")[0],totalAmount:""}),s=t([]);t(null);t(!1);export{o as a,r as b,s as c};

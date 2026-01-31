@@ -1,8 +1,8 @@
-import AddTaskIcon from '@mui/icons-material/AddTask';
-import BugReportIcon from '@mui/icons-material/BugReport';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import HomeIcon from '@mui/icons-material/Home';
-import TerrainIcon from '@mui/icons-material/Terrain';
+import BusinessIcon from '@mui/icons-material/Business';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import DescriptionIcon from '@mui/icons-material/Description';
+import HistoryIcon from '@mui/icons-material/History';
+import LoginIcon from '@mui/icons-material/Login';
 
 import asyncComponentLoader from '@/utils/loader';
 
@@ -10,34 +10,34 @@ import { Routes } from './types';
 
 const routes: Routes = [
   {
-    component: asyncComponentLoader(() => import('@/pages/Welcome')),
+    component: asyncComponentLoader(() => import('@/pages/Dashboard')),
     path: '/',
-    title: 'Welcome',
-    icon: HomeIcon,
+    title: 'Dashboard',
+    icon: DashboardIcon,
   },
   {
-    component: asyncComponentLoader(() => import('@/pages/Page1')),
-    path: '/page-1',
-    title: 'Page 1',
-    icon: GitHubIcon,
+    component: asyncComponentLoader(() => import('@/pages/Login')),
+    path: '/login',
+    title: 'Iniciar Sesión',
+    icon: LoginIcon,
   },
   {
-    component: asyncComponentLoader(() => import('@/pages/Page2')),
-    path: '/page-2',
-    title: 'Page 2',
-    icon: AddTaskIcon,
+    component: asyncComponentLoader(() => import('@/pages/BusinessProfile')),
+    path: '/perfil-negocio',
+    title: 'Perfil de Negocio',
+    icon: BusinessIcon,
   },
   {
-    component: asyncComponentLoader(() => import('@/pages/Page3')),
-    path: '/page-3',
-    title: 'Page 3',
-    icon: TerrainIcon,
+    component: asyncComponentLoader(() => import('@/pages/InvoiceForm')),
+    path: '/nueva-boleta',
+    title: 'Nueva Boleta',
+    icon: DescriptionIcon,
   },
   {
-    component: asyncComponentLoader(() => import('@/pages/Page4')),
-    path: '/page-4',
-    title: 'Page 4',
-    icon: BugReportIcon,
+    component: asyncComponentLoader(() => import('@/pages/History')),
+    path: '/facturas',
+    title: 'Mis Facturas',
+    icon: HistoryIcon,
   },
   {
     component: asyncComponentLoader(() => import('@/pages/NotFound')),

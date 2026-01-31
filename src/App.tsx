@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router';
 
 import { CssBaseline } from '@mui/material';
 
+import { AuthProvider } from '@/contexts/AuthContext';
 import { withErrorHandler } from '@/error-handling';
 import AppErrorBoundaryFallback from '@/error-handling/fallbacks/App';
 
@@ -15,12 +16,14 @@ function App() {
   return (
     <Fragment>
       <CssBaseline />
-      <HotKeys />
-      <BrowserRouter>
-        <Header />
-        <Sidebar />
-        <Pages />
-      </BrowserRouter>
+      <AuthProvider>
+        <HotKeys />
+        <BrowserRouter>
+          <Header />
+          <Sidebar />
+          <Pages />
+        </BrowserRouter>
+      </AuthProvider>
     </Fragment>
   );
 }

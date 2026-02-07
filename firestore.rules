@@ -38,7 +38,23 @@ service cloud.firestore {
       allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
       allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
     }
-    
+
+    // Invoices collection (facturas) - users can only access their own
+    match /invoices/{invoiceId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.clienteNombre is string
+                    && request.resource.data.items is list
+                    && request.resource.data.items.size() > 0
+                    && request.resource.data.subtotal is number
+                    && request.resource.data.total is number;
+      allow update: if isAuthenticated()
+                    && resource.data.userId == request.auth.uid
+                    && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
     // Execution logs - users can only read logs for their boletas
     match /execution_logs/{logId} {
       allow read: if isAuthenticated();

@@ -30,23 +30,28 @@ export const functions = getFunctions(app);
 if (import.meta.env.DEV || window.location.hostname === 'localhost') {
   console.log('🔧 Connecting to Firebase Emulators...');
 
+  // Get emulator ports from environment variables (defaults to standard Firebase ports)
+  const authPort = import.meta.env.VITE_AUTH_EMULATOR_PORT || '9099';
+  const firestorePort = import.meta.env.VITE_FIRESTORE_EMULATOR_PORT || '8080';
+  const functionsPort = import.meta.env.VITE_FUNCTIONS_EMULATOR_PORT || '5001';
+
   try {
-    connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
-    console.log('✅ Auth Emulator connected');
+    connectAuthEmulator(auth, `http://localhost:${authPort}`, { disableWarnings: true });
+    console.log(`✅ Auth Emulator connected (port ${authPort})`);
   } catch {
     console.warn('⚠️ Auth Emulator connection skipped (already connected or unavailable)');
   }
 
   try {
-    connectFirestoreEmulator(db, 'localhost', 8080);
-    console.log('✅ Firestore Emulator connected');
+    connectFirestoreEmulator(db, 'localhost', Number(firestorePort));
+    console.log(`✅ Firestore Emulator connected (port ${firestorePort})`);
   } catch {
     console.warn('⚠️ Firestore Emulator connection skipped (already connected or unavailable)');
   }
 
   try {
-    connectFunctionsEmulator(functions, 'localhost', 5001);
-    console.log('✅ Functions Emulator connected');
+    connectFunctionsEmulator(functions, 'localhost', Number(functionsPort));
+    console.log(`✅ Functions Emulator connected (port ${functionsPort})`);
   } catch {
     console.warn('⚠️ Functions Emulator connection skipped (already connected or unavailable)');
   }

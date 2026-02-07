@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# Conductor Workspace Initialization Script
+# This script runs automatically when a new workspace is created
+
+set -e
+
+# Ensure Java 21 is in PATH (required for Firebase emulators)
+export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
+
+echo "🚀 Initializing Honorarios Bot workspace..."
+echo ""
+
+# Step 1: Install dependencies
+echo "📦 Installing dependencies..."
+pnpm install
+echo "✅ Dependencies installed"
+echo ""
+
+# Step 2: Create .env file
+echo "📝 Creating .env file..."
+cat > .env << 'EOF'
+# Firebase Configuration (Development)
+VITE_FIREBASE_API_KEY=AIzaSyCMo3rMU28z-nyDdtiYY7gnPDldOoyxeKU
+VITE_FIREBASE_AUTH_DOMAIN=sii-robot-a6284.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=sii-robot-a6284
+VITE_FIREBASE_STORAGE_BUCKET=sii-robot-a6284.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=415042811690
+VITE_FIREBASE_APP_ID=1:415042811690:web:80612751ce453e21291053
+VITE_FIREBASE_MEASUREMENT_ID=G-30TQY79797
+
+# Test User Credentials
+VITE_TEST_USER_EMAIL=test@example.com
+VITE_TEST_USER_PASSWORD=TestPassword123!
+
+# URLs
+VITE_PROD_URL=https://www.honorarios-bot.cl
+VITE_DEV_URL=http://localhost:5173
+
+# Firebase Emulator Ports (Default ports)
+VITE_FIRESTORE_EMULATOR_PORT=8080
+VITE_AUTH_EMULATOR_PORT=9099
+VITE_FUNCTIONS_EMULATOR_PORT=5001
+EOF
+echo "✅ .env file created"
+echo ""
+
+# Step 3: Start Firebase emulators in background
+echo "🔥 Starting Firebase emulators..."
+pnpm run emulators > emulators.log 2>&1 &
+EMULATOR_PID=$!
+echo "✅ Emulators started (PID: $EMULATOR_PID)"
+echo "   Logs: emulators.log"
+echo ""
+
+# Step 4: Wait for emulators to be ready
+echo "⏳ Waiting for emulators to initialize..."
+sleep 10
+echo "✅ Emulators ready"
+echo ""
+
+# Step 5: Seed the database
+echo "🌱 Seeding database with test data..."
+pnpm run seed:db
+echo ""
+
+# Step 6: Start development server
+echo "🎯 Starting development server..."
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "✨ Workspace initialized successfully!"
+echo ""
+echo "📋 Test Credentials:"
+echo "   Email:    test@example.com"
+echo "   Password: TestPassword123!"
+echo ""
+echo "🌐 URLs:"
+echo "   App:      http://localhost:5173"
+echo "   Emulator: http://localhost:4000"
+echo ""
+echo "📚 Documentation:"
+echo "   See AGENTS.md for project details"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+pnpm dev

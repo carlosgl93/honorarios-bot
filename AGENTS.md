@@ -269,7 +269,7 @@ Chilean tax ID validation with check digit verification:
 ### Adding Emulator Data
 - Edit `src/scripts/seed-db.ts`
 - Use Firebase Admin SDK patterns
-- Connect to emulators (ports: 8081, 9100)
+- Connect to emulators (ports: 8080, 9099)
 - Run: `pnpm run seed:db`
 
 ### Firebase Emulator Data Persistence
@@ -282,7 +282,7 @@ Chilean tax ID validation with check digit verification:
 
 ### Emulator Port Conflicts
 If you see "port already in use" errors:
-- Check `firebase.json` emulator ports (8081, 9100, 5002, 4001)
+- Check `firebase.json` emulator ports (8080, 9099, 5001, 4000)
 - Modify ports if needed
 - Update `src/scripts/seed-db.ts` with new ports
 - Update `.env` file with new ports
@@ -299,7 +299,7 @@ If you see "port already in use" errors:
 - Test with `PDFViewer` in development
 
 ### Authentication Issues
-- Verify emulator is running on port 9100
+- Verify emulator is running on port 9099
 - Check `.env` file has correct test credentials
 - Ensure user is created via seed script
 - Clear browser storage if needed

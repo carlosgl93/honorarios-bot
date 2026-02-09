@@ -5,6 +5,15 @@
 
 set -e
 
+# Cleanup function to kill background processes on exit
+cleanup() {
+  if [ ! -z "$EMULATOR_PID" ]; then
+    echo "🧹 Cleaning up background processes..."
+    kill $EMULATOR_PID 2>/dev/null || true
+  fi
+}
+trap cleanup EXIT ERR
+
 # Ensure Java 21 is in PATH (required for Firebase emulators)
 export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
 

@@ -398,7 +398,30 @@ export const InvoiceForm = () => {
           open={previewOpen}
           onClose={() => setPreviewOpen(false)}
           business={businessProfile}
-          invoice={formData}
+          invoice={{
+            userId: user.uid,
+            numeroFactura: generatedInvoiceNumber,
+            clienteNombre: formData.clienteNombre,
+            clienteRut: formData.clienteRut,
+            clienteEmail: formData.clienteEmail,
+            clienteDireccion: formData.clienteDireccion,
+            clienteComuna: formData.clienteComuna,
+            clienteCiudad: formData.clienteCiudad,
+            items: formData.items,
+            subtotal: totals.subtotal,
+            tasaIVA: totals.tasaIVA,
+            montoIVA: totals.montoIVA,
+            total: totals.total,
+            fechaEmision: new Date(formData.fechaEmision),
+            fechaVencimiento: formData.fechaVencimiento
+              ? new Date(formData.fechaVencimiento)
+              : undefined,
+            estado: 'borrador',
+            notas: formData.notas,
+            condicionesPago: formData.condicionesPago,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          }}
           invoiceNumber={generatedInvoiceNumber}
         />
       )}

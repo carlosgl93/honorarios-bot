@@ -15,7 +15,9 @@
     "ts:check": "tsc --noEmit",
     "test:unit": "vitest src",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "emulators": "firebase emulators:start --import=.firebase-data --export-on-exit",
+    "seed:db": "tsx src/scripts/seed-db.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -50,6 +52,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
     "prettier": "^3.5.2",
+    "tsx": "^4.21.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",

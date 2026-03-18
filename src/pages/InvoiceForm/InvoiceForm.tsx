@@ -15,11 +15,12 @@ import {
   Typography,
 } from '@mui/material';
 
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 
 import { InvoiceItemRow } from '@/components/InvoiceItemRow';
 import { PDFPreviewDialog } from '@/components/PDFPreviewDialog';
 import { useAuth } from '@/contexts/AuthContext';
+import { getBusinessProfile } from '@/services/firestore';
 import { businessProfileAtom, invoiceFormAtom } from '@/store/invoice-atoms';
 import {
   InvoiceItem,
@@ -35,11 +36,13 @@ export const InvoiceForm = () => {
   const { user } = useAuth();
   const [formData, setFormData] = useAtom(invoiceFormAtom);
   const businessProfile = useAtomValue(businessProfileAtom);
+  const setBusinessProfile = useSetAtom(businessProfileAtom);
 
   const [error, setError] = useState('');
   const [generating, setGenerating] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [generatedInvoiceNumber, setGeneratedInvoiceNumber] = useState('');
+  const [profileLoading, setProfileLoading] = useState(!businessProfile);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -48,14 +51,21 @@ export const InvoiceForm = () => {
     }
   }, [user, navigate]);
 
-  // Redirect to business profile if not configured
-  // useEffect(() => {
-  //   if (user && !businessProfile) {
-  //     navigate('/perfil-negocio');
-  //   }
-  // }, [user, businessProfile, navigate]);
+  // Fetch business profile if not already in atom
+  useEffect(() => {
+    if (!user || businessProfile) return;
 
-  if (!user || !businessProfile) return null;
+    getBusinessProfile(user.uid).then((profile) => {
+      if (!profile) {
+        navigate('/perfil-negocio');
+      } else {
+        setBusinessProfile(profile);
+      }
+      setProfileLoading(false);
+    });
+  }, [user, businessProfile, setBusinessProfile, navigate]);
+
+  if (!user || profileLoading) return null;
 
   const handleInputChange =
     (field: keyof typeof formData) =>

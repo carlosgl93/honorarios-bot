@@ -5,15 +5,6 @@
 
 set -e
 
-# Cleanup function to kill background processes on exit
-cleanup() {
-  if [ ! -z "$EMULATOR_PID" ]; then
-    echo "🧹 Cleaning up background processes..."
-    kill $EMULATOR_PID 2>/dev/null || true
-  fi
-}
-trap cleanup EXIT ERR
-
 # Ensure Java 21 is in PATH (required for Firebase emulators)
 export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
 
@@ -23,7 +14,17 @@ echo ""
 # Step 1: Install dependencies
 echo "📦 Installing dependencies..."
 pnpm install
-echo "✅ Dependencies installed"
+echo "✅ Root dependencies installed"
+echo ""
+
+# Step 1b: Install and build functions
+echo "📦 Installing functions dependencies..."
+npm install --prefix functions
+echo "✅ Functions dependencies installed"
+echo ""
+echo "🔨 Building functions..."
+npm run build --prefix functions
+echo "✅ Functions built"
 echo ""
 
 # Step 2: Create .env file
@@ -46,8 +47,8 @@ VITE_TEST_USER_PASSWORD=TestPassword123!
 VITE_PROD_URL=https://www.honorarios-bot.cl
 VITE_DEV_URL=http://localhost:5173
 
-# Firebase Emulator Ports (Default ports)
-VITE_FIRESTORE_EMULATOR_PORT=8080
+# Firebase Emulator Ports
+VITE_FIRESTORE_EMULATOR_PORT=8081
 VITE_AUTH_EMULATOR_PORT=9099
 VITE_FUNCTIONS_EMULATOR_PORT=5001
 EOF

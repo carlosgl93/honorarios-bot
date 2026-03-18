@@ -1,37 +1,22 @@
+import { initializeApp } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
+import { FieldValue, getFirestore } from 'firebase-admin/firestore';
+
 /**
  * Database Seeding Script
- * Seeds the Firebase emulator with test data for development
+ * Seeds the Firebase emulator with test data for development.
+ * Uses the Admin SDK to bypass security rules.
  */
-import { initializeApp } from 'firebase/app';
-import { FirebaseError } from 'firebase/app';
-import { connectAuthEmulator, createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import {
-  connectFirestoreEmulator,
-  doc,
-  getFirestore,
-  serverTimestamp,
-  setDoc,
-} from 'firebase/firestore';
 
-// Firebase config for local development
-const firebaseConfig = {
-  apiKey: 'AIzaSyCMo3rMU28z-nyDdtiYY7gnPDldOoyxeKU',
-  authDomain: 'sii-robot-a6284.firebaseapp.com',
-  projectId: 'sii-robot-a6284',
-  storageBucket: 'sii-robot-a6284.firebasestorage.app',
-  messagingSenderId: '415042811690',
-  appId: '1:415042811690:web:80612751ce453e21291053',
-  measurementId: 'G-30TQY79797',
-};
+// Must be set before importing firebase-admin
+process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8081';
+process.env.FIREBASE_AUTH_EMULATOR_HOST = 'localhost:9099';
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+// Initialize Admin SDK (no credentials needed for emulator)
+initializeApp({ projectId: 'sii-robot-a6284' });
 
-// Connect to emulators (using default ports)
-connectFirestoreEmulator(db, 'localhost', 8080);
-connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+const db = getFirestore();
+const auth = getAuth();
 
 // Test user credentials
 const TEST_USER_EMAIL = 'test@example.com';
@@ -40,7 +25,7 @@ const TEST_USER_PASSWORD = 'TestPassword123!';
 // Default business profile data
 const DEFAULT_BUSINESS_PROFILE = {
   nombreEmpresa: 'Consultora Demo SpA',
-  tipoNegocio: 'empresa' as const,
+  tipoNegocio: 'empresa',
   rut: '76.123.456-7',
   giro: 'Servicios de consultoría y desarrollo de software',
   email: 'contacto@consultorademo.cl',
@@ -64,19 +49,19 @@ async function seedDatabase() {
     let userId: string;
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        TEST_USER_EMAIL,
-        TEST_USER_PASSWORD,
-      );
-      userId = userCredential.user.uid;
+      const user = await auth.createUser({
+        email: TEST_USER_EMAIL,
+        password: TEST_USER_PASSWORD,
+        displayName: 'Test User',
+      });
+      userId = user.uid;
       console.log(`✅ Test user created: ${TEST_USER_EMAIL}`);
       console.log(`   UID: ${userId}\n`);
     } catch (error: unknown) {
-      if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
+      if (error instanceof Error && 'code' in error && error.code === 'auth/email-already-exists') {
         console.log('⚠️  Test user already exists, fetching existing user...');
-        // Get existing user UID - in emulator, we'll use a predictable UID
-        userId = 'test-user-uid';
+        const existing = await auth.getUserByEmail(TEST_USER_EMAIL);
+        userId = existing.uid;
         console.log(`   Using UID: ${userId}\n`);
       } else {
         throw error;
@@ -85,18 +70,16 @@ async function seedDatabase() {
 
     // Step 2: Create user profile document
     console.log('📝 Creating user profile...');
-    const userRef = doc(db, 'users', userId);
-    await setDoc(
-      userRef,
+    await db.collection('users').doc(userId).set(
       {
         uid: userId,
         email: TEST_USER_EMAIL,
         displayName: 'Test User',
         photoURL: null,
         hasBusinessProfile: true,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        lastLoginAt: serverTimestamp(),
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+        lastLoginAt: FieldValue.serverTimestamp(),
       },
       { merge: true },
     );
@@ -104,17 +87,18 @@ async function seedDatabase() {
 
     // Step 3: Create business profile
     console.log('🏢 Creating business profile...');
-    const businessRef = doc(db, 'businessProfiles', userId);
-    await setDoc(
-      businessRef,
-      {
-        ...DEFAULT_BUSINESS_PROFILE,
-        userId,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      },
-      { merge: true },
-    );
+    await db
+      .collection('businessProfiles')
+      .doc(userId)
+      .set(
+        {
+          ...DEFAULT_BUSINESS_PROFILE,
+          userId,
+          createdAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
+        },
+        { merge: true },
+      );
     console.log('✅ Business profile created\n');
 
     // Summary
@@ -129,7 +113,7 @@ async function seedDatabase() {
     console.log(`   RUT:      ${DEFAULT_BUSINESS_PROFILE.rut}`);
     console.log(`   Email:    ${DEFAULT_BUSINESS_PROFILE.email}\n`);
     console.log('🌐 Emulator URLs:');
-    console.log('   Firestore: http://localhost:8080');
+    console.log('   Firestore: http://localhost:8081');
     console.log('   Auth:      http://localhost:9099');
     console.log('   UI:        http://localhost:4000');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
@@ -141,5 +125,4 @@ async function seedDatabase() {
   }
 }
 
-// Run the seeding function
 seedDatabase();
